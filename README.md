@@ -1,16 +1,18 @@
 # Wastewater Data Processor
+[![clasp](https://img.shields.io/badge/built%20with-clasp-4285f4.svg)](https://github.com/google/clasp)
 
 How To Install:
 
 1. Clone this repository.
-2. Install [clasp](https://github.com/google/clasp).
-3. Create a new Google Sheet.
-4. Open Google Apps Script within the Google Sheet using Extensions -> Apps Script
-5. Copy the script ID in the URL.
-6. Open the repository in a terminal/shell. 
-7. Run `clasp clone "yourScriptIDHere"`, putting your script's ID in quotes.
-8. Delete Code.gs.
-9. Run `npm i`
+1. Install [clasp](https://github.com/google/clasp).
+1. Enable the [Google Apps Script API](https://script.google.com/home/usersettings); see clasp documentation for more.
+1. Create a new Google Sheet.
+1. Open Google Apps Script within the Google Sheet using Extensions -> Apps Script
+1. Copy the script ID in the URL.
+1. Open the repository in a terminal/shell. 
+1. Run `clasp clone "yourScriptIDHere"`, putting your script's ID in quotes.
+1. Delete Code.gs.
+1. Run `npm i`
 ---
 How to Develop:
 
