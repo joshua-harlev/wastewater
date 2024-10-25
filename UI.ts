@@ -1,7 +1,0 @@
-function CreateMenu(){
-
-}
-
-function PrintInstructions(){
-    
-}
