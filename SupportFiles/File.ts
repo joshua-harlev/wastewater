@@ -63,6 +63,7 @@ export class CSVFile extends File {
             })
             dataForSheet.unshift(header);
         });
+        // TODO impl. inequalities?
         // (this.options as CSVOptions).columnInequalities?.forEach((inequality) => {
         //     dataForSheet = dataForSheet.filter((row) => {
         //         return row[inequality[0].toString()] != inequality[1].toString();
@@ -72,10 +73,9 @@ export class CSVFile extends File {
         const numCols = dataForSheet[0].length;
         sheet.getRange(1, 1, numRows, numCols).setValues(dataForSheet);
         sheet.setFrozenRows(1);
-        sheet.sort(dataForSheet[0].indexOf((this.options as CSVOptions).dateColumnName)+1)
+        if((this.options as CSVOptions)?.dateColumnName != undefined)
+            sheet.sort(dataForSheet[0].indexOf((this.options as CSVOptions).dateColumnName)+1)
     }
-
-
 }
 
 export interface JSONOptions {
