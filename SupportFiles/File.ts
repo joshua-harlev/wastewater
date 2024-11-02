@@ -1,8 +1,10 @@
-enum FileType {
+import { Constants } from "./Constants";
+
+export enum FileType {
     CSV,
     JSON
 }
-abstract class File {
+export abstract class File {
     fileType: FileType;
     downloadLink: string;
     sheetName: string;
@@ -16,11 +18,11 @@ abstract class File {
         this.options = options;
     }
 
-    abstract exportToSheet(sheetName: string) : void;
+    abstract exportToSheet() : void;
 
     getDataFile() : void {
         const data = UrlFetchApp.fetch(this.link).getAs("text/csv");
-        this.file = DriveApp.getFolderById(dataFolderId).createFile(data);
+        this.file = DriveApp.getFolderById(Constants.prototype.DATA_FOLDER_ID).createFile(data);
     }
 
     // #region GettersAndSetters
@@ -35,4 +37,52 @@ abstract class File {
             else console.log("Error: Link did not match regex. Please investigate.");
     }
     // #endregion
+}
+
+export interface CSVOptions {
+    columnEqualities?: [columnName: string, value: string][],
+    columnInequalities?: [columnName: string, value: string][],
+    dateColumnName?: string
+}
+export class CSVFile extends File {
+    constructor(fileType: FileType, downloadLink : string, sheetName: string, options: CSVOptions) {
+        super(fileType, downloadLink, sheetName, options);
+    }
+    exportToSheet(): void {
+        EnsureSheetExists(this.sheetName);
+        let sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(this.sheetName);
+        ClearSheet(sheet);
+        let csvData = UrlFetchApp.fetch(this.link);
+        let dataForSheet = Utilities.parseCsv(csvData.getContentText());
+        (this.options as CSVOptions).columnEqualities?.forEach((equality) => {
+            const header = dataForSheet.shift();
+            let equalityColumn = header.indexOf(equality[0].toString());
+            dataForSheet = dataForSheet.filter((row) => {
+                // console.log(`${row[equalityColumn]} | ${equality[1].toString()}`)
+                return row[equalityColumn] == equality[1].toString();
+            })
+            dataForSheet.unshift(header);
+        });
+        // (this.options as CSVOptions).columnInequalities?.forEach((inequality) => {
+        //     dataForSheet = dataForSheet.filter((row) => {
+        //         return row[inequality[0].toString()] != inequality[1].toString();
+        //     })
+        // });
+        const numRows = dataForSheet.length;
+        const numCols = dataForSheet[0].length;
+        sheet.getRange(1, 1, numRows, numCols).setValues(dataForSheet);
+        sheet.setFrozenRows(1);
+        sheet.sort(dataForSheet[0].indexOf((this.options as CSVOptions).dateColumnName)+1)
+    }
+
+
+}
+
+export interface JSONOptions {
+
+}
+export class JSONFile extends File {
+    exportToSheet(): void {
+        // to implement
+    }
 }
