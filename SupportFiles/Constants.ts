@@ -9,10 +9,12 @@ export class Constants {
     MAIN_FILE_OPTIONS : CSVOptions;
 
     ensureVariablesSet() {
-        this.DATA_FOLDER_ID = "1r9tyJhRyZMGJ6e28K9e4NbPaSEk9htFn";
+        const DocumentProperties = PropertiesService.getDocumentProperties();
+        const columnLetter = DocumentProperties.getProperty("variableColumn");
+        this.DATA_FOLDER_ID = DocumentProperties.getProperty("dataFolderId");
         this.VAR_SHEET = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Variables");
-        this.URL = this.VAR_SHEET.getRange("B1").getValue();
-        this.SHEET_NAME = this.VAR_SHEET.getRange("B2").getValue();
+        this.URL = this.VAR_SHEET.getRange(`${columnLetter}1`).getValue();
+        this.SHEET_NAME = this.VAR_SHEET.getRange(`${columnLetter}2`).getValue();
         if(this.SHEET_NAME == "CAGovData") {
             this.MAIN_FILE_OPTIONS  = {
                 columnEqualities: [

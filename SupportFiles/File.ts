@@ -1,4 +1,5 @@
 import { Constants } from "./Constants";
+import { UI } from "./UI";
 
 export enum FileType {
     CSV,
@@ -49,32 +50,29 @@ export class CSVFile extends File {
         super(fileType, downloadLink, sheetName, options);
     }
     exportToSheet(): void {
+        UI.prototype.toast("Starting data processing...");
         EnsureSheetExists(this.sheetName);
         let sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(this.sheetName);
         ClearSheet(sheet);
+        UI.prototype.toast("Fetching file...");
         let csvData = UrlFetchApp.fetch(this.link);
         let dataForSheet = Utilities.parseCsv(csvData.getContentText());
+        UI.prototype.toast("Processing file...");
         (this.options as CSVOptions).columnEqualities?.forEach((equality) => {
             const header = dataForSheet.shift();
             let equalityColumn = header.indexOf(equality[0].toString());
             dataForSheet = dataForSheet.filter((row) => {
-                // console.log(`${row[equalityColumn]} | ${equality[1].toString()}`)
                 return row[equalityColumn] == equality[1].toString();
             })
             dataForSheet.unshift(header);
         });
-        // TODO impl. inequalities?
-        // (this.options as CSVOptions).columnInequalities?.forEach((inequality) => {
-        //     dataForSheet = dataForSheet.filter((row) => {
-        //         return row[inequality[0].toString()] != inequality[1].toString();
-        //     })
-        // });
         const numRows = dataForSheet.length;
         const numCols = dataForSheet[0].length;
         sheet.getRange(1, 1, numRows, numCols).setValues(dataForSheet);
         sheet.setFrozenRows(1);
         if((this.options as CSVOptions)?.dateColumnName != undefined)
             sheet.sort(dataForSheet[0].indexOf((this.options as CSVOptions).dateColumnName)+1)
+        UI.prototype.toast("Done!");
     }
 }
 

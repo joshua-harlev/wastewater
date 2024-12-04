@@ -26,5 +26,7 @@ Notes:
 
 * Clasp will automatically compile your ts code into a gs file, which will appear in the Apps Script editor. Be aware that seeing `// Compiled using undefined undefined (TypeScript 4.9.5)` is normal.
 * Create a new sheet called "Variables", and place the file link in A1. Place the sheet's name in A2.
-  * Change these locations in Constants.ts in EnsureVariablesSet().
+  * You can change the column you pull from using the UI.
+* Take note of the Google Drive folder you'd like to store data files in, and paste the ID in when you start the script.
 * Constants should not be a class, and File would ideally be separated into multiple. This is because Apps Script currently has a bug with import/export handing.
+* For new data sources, configure options in Constants.ts.
