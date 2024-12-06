@@ -2,6 +2,9 @@
 
 [![clasp](https://img.shields.io/badge/built%20with-clasp-4285f4.svg)](https://github.com/google/clasp)
 
+Find our dashboard [here](https://joshua-harlev.github.io/wastewater-dashboard).
+
+
 How To Install:
 
 1. Clone this repository.
